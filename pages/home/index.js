@@ -11,13 +11,13 @@
 import React, { PropTypes } from 'react';
 import Layout from '../../components/Layout';
 import s from './styles.css';
-import Minesweeper from '../../components/Minesweeper/';
+import Game from '../../components/Game';
 
 class HomePage extends React.Component {
 
   render() {
     return (
-        <Minesweeper />
+        <Game />
     );
   }
 
