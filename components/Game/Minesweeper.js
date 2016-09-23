@@ -31,7 +31,7 @@ const Game = ({ grid }) => {
 
 
 const Minesweeper = connect(
-  (state) => ({ grid: state.game.grid }),
+  (state) => ({ grid: state.grid }),
   (dispatch) => ({})
 )(Game);
 
