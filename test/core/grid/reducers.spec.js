@@ -1,8 +1,11 @@
 import { expect } from 'chai';
-import grid, {
+import R from 'ramda';
+import gridReducer, {
   neighbours,
-  padGrid
+  padGrid,
+  proximityMines
 } from '../../../core/grid/reducers.js';
+
 
 
 describe('Grid Reducer', () => {
@@ -71,6 +74,46 @@ describe('Grid Neighbours', () => {
     expect(neighbours(2, 1, GRID)).to.be.eql([
       4, 5, 6, 7, 9,
     ]);
+  });
+
+});
+
+describe('Proximity Mines', () => {
+
+  it('should be zero with no mines for center peiece', () => {
+    const grid = [
+      R.map(() => ({ mine: false }))(R.range(0, 3)),
+      R.map(() => ({ mine: false }))(R.range(0, 3)),
+      R.map(() => ({ mine: false }))(R.range(0, 3)),
+    ];
+    expect(proximityMines(1, 1, grid)).to.be.eql(0);
+  });
+
+  it('should be 8 with all mines for center peiece', () => {
+    const grid = [
+      R.map(() => ({ mine: true }))(R.range(0, 3)),
+      R.map(() => ({ mine: true }))(R.range(0, 3)),
+      R.map(() => ({ mine: true }))(R.range(0, 3)),
+    ];
+    expect(proximityMines(1, 1, grid)).to.be.eql(8);
+  });
+
+  it('should be 5 with all mines for edge peice', () => {
+    const grid = [
+      R.map(() => ({ mine: true }))(R.range(0, 3)),
+      R.map(() => ({ mine: true }))(R.range(0, 3)),
+      R.map(() => ({ mine: true }))(R.range(0, 3)),
+    ];
+    expect(proximityMines(1, 0, grid)).to.be.eql(5);
+  });
+
+  it('should be 3 with all mines for edge peice', () => {
+    const grid = [
+      R.map(() => ({ mine: true }))(R.range(0, 3)),
+      R.map(() => ({ mine: true }))(R.range(0, 3)),
+      R.map(() => ({ mine: true }))(R.range(0, 3)),
+    ];
+    expect(proximityMines(0, 0, grid)).to.be.eql(3);
   });
 
 });

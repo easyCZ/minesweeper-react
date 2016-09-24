@@ -32,9 +32,14 @@ export const neighbours = R.curry((row, col, grid) => {
     R.map(colSlice),
     rowSlice
   )(padded);
-
 });
 
+const isMine = (c) => c.mine;
+
+export const proximityMines =
+  R.compose(R.length, R.filter(isMine), neighbours);
+
+// R.curry((row, col, neighbours) =>)
 const initialGrid = generateGrid(30, 20);
 
 const grid = (state = initialGrid, action) => {
