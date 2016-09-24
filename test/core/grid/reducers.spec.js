@@ -80,6 +80,12 @@ describe('Grid Neighbours', () => {
 
 describe('Proximity Mines', () => {
 
+  const GRID = [
+    R.map(() => ({ mine: true }))(R.range(0, 3)),
+    R.map(() => ({ mine: true }))(R.range(0, 3)),
+    R.map(() => ({ mine: true }))(R.range(0, 3)),
+  ];
+
   it('should be zero with no mines for center peiece', () => {
     const grid = [
       R.map(() => ({ mine: false }))(R.range(0, 3)),
@@ -90,30 +96,15 @@ describe('Proximity Mines', () => {
   });
 
   it('should be 8 with all mines for center peiece', () => {
-    const grid = [
-      R.map(() => ({ mine: true }))(R.range(0, 3)),
-      R.map(() => ({ mine: true }))(R.range(0, 3)),
-      R.map(() => ({ mine: true }))(R.range(0, 3)),
-    ];
-    expect(proximityMines(1, 1, grid)).to.be.eql(8);
+    expect(proximityMines(1, 1, GRID)).to.be.eql(8);
   });
 
   it('should be 5 with all mines for edge peice', () => {
-    const grid = [
-      R.map(() => ({ mine: true }))(R.range(0, 3)),
-      R.map(() => ({ mine: true }))(R.range(0, 3)),
-      R.map(() => ({ mine: true }))(R.range(0, 3)),
-    ];
-    expect(proximityMines(1, 0, grid)).to.be.eql(5);
+    expect(proximityMines(1, 0, GRID)).to.be.eql(5);
   });
 
   it('should be 3 with all mines for edge peice', () => {
-    const grid = [
-      R.map(() => ({ mine: true }))(R.range(0, 3)),
-      R.map(() => ({ mine: true }))(R.range(0, 3)),
-      R.map(() => ({ mine: true }))(R.range(0, 3)),
-    ];
-    expect(proximityMines(0, 0, grid)).to.be.eql(3);
+    expect(proximityMines(0, 0, GRID)).to.be.eql(3);
   });
 
 });
