@@ -1,15 +1,6 @@
 import R from 'ramda';
 
 
-const generateCell = () =>
-  ({ mine: Math.random() <= 0.3, flagged: Math.random() >= 0.7, neighbours: 0 });
-
-const generateRow = (n) =>
-  R.range(0, n).map(generateCell);
-
-const generateGrid = (rows, cols) =>
-  R.range(0, rows).map(generateRow.bind(null, cols));
-
 const pad = (padding) =>
   R.compose(R.prepend(padding), R.append(padding));
 
@@ -27,7 +18,7 @@ export const neighbours = R.curry((row, col, grid) => {
   const colSlice = R.slice(paddedColIndex - 1, paddedColIndex + 2);
   return R.compose(
     R.filter(e => e !== null),
-    R.remove(4, 1),   // the middle is always equal to [row, col]
+    R.remove(4, 1),   // the middle is at position 4
     R.flatten,
     R.map(colSlice),
     rowSlice
@@ -39,8 +30,39 @@ const isMine = (c) => c.mine;
 export const proximityMines =
   R.compose(R.length, R.filter(isMine), neighbours);
 
+
+const generateCell = () =>
+  ({ mine: Math.random() <= 0.3, flagged: Math.random() >= 0.7, neighbours: 0 });
+
+const generateRow = (n) =>
+  R.range(0, n).map(generateCell);
+
+const getNeighbours = (grid, row, col) =>
+  ({ neighbours: proximityMines(grid, row, col) });
+
+export const generateGrid = (rows, cols) => {
+  const grid = R.map(generateRow.bind(null, cols))(R.range(0, rows));
+  const mapIndexed = R.addIndex(R.map);
+  const gridWithValues = mapIndexed(
+    (row, rowIndex, grid) => mapIndexed(
+      (cell, colIndex, row) => {
+        return R.merge(cell, getNeighbours(rowIndex, colIndex, grid))
+      })(row)
+  )(grid);
+
+  return gridWithValues;
+
+  // R.compose(
+  //   R.map(R.map(c => getCellValue)),
+
+  // ));
+}
+
+
+
+
 // R.curry((row, col, neighbours) =>)
-const initialGrid = generateGrid(30, 20);
+const initialGrid = generateGrid(20, 30);
 
 const grid = (state = initialGrid, action) => {
 

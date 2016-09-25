@@ -23,7 +23,6 @@ const Game = ({ grid }) => {
 
   return (
     <div>
-      <p>Test 2</p>
       {grid.map(renderCol)}
     </div>
   );
