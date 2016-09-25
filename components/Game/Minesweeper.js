@@ -2,20 +2,26 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Cell from './Cell.js';
+import { reveal } from '../../core/grid/actions.js';
 
 
-const Game = ({ grid }) => {
+const Game = ({ grid, reveal }) => {
 
   console.log('grid', grid);
 
-  const renderCol = (col, colId) => (
+  const renderCol = (row, rowId) => (
     <div>
       {
-        col.map((c, rowId) => <Cell
+        row.map((c, colId) => <Cell
           isMine={c.mine}
           isFlagged={c.flagged}
           key={colId + '-' + rowId}
           neighbours={c.neighbours}
+          isRevealed={c.revealed}
+          onClick={(e) => {
+            console.log('click');
+            reveal(rowId, colId)
+          }}
         />)
       }
     </div>
@@ -30,8 +36,13 @@ const Game = ({ grid }) => {
 
 
 const Minesweeper = connect(
-  (state) => ({ grid: state.grid }),
-  (dispatch) => ({})
+  ({ grid }) => ({ grid }),
+  (dispatch, ownProps) => {
+    console.log('ownProps', ownProps);
+    return {
+      reveal: (row, col) => dispatch(reveal(row, col))
+    };
+  }
 )(Game);
 
 export default Minesweeper;

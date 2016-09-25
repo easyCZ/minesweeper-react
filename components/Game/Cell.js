@@ -9,23 +9,17 @@ const style = {
   boxShadow: '0 0 1px rgba(0, 0, 0, 0.1)'
 };
 
-export const Mine = () => (
-  <span style={style}>💣</span>
-);
 
-export const Flag = () => (
-  <span style={style}>🚩</span>
-);
+const Cell = ({ isMine, isFlagged, neighbours, isRevealed, onClick }) => {
 
-export const Safe = ({ value }) => (
-  <span style={style}>{ value || '⬜'}</span>
-);
+  if (isRevealed) {
+    if (isFlagged) return <span style={style} onClick={onClick}>🚩</span>;
+    if (isMine) return <span style={style}>💣</span>;
+    if (neighbours === 0) return <span style={style} onClick={onClick}>{ '✔️' }</span>;;
+    return <span style={style} onClick={onClick}>{ neighbours }</span>;
+  }
 
-
-const Cell = ({ isMine, isFlagged, neighbours }) => {
-  if (isMine) return <Mine />;
-  if (isFlagged) return <Flag />;
-  return <Safe value={neighbours} />;
+  return <span style={style} onClick={onClick}>{ '⬜' }</span>;
 };
 
 export default Cell;

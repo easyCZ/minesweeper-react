@@ -1,5 +1,9 @@
 import R from 'ramda';
+import {
+  REVEAL_LOCATION,
+} from './actions.js';
 
+const mapIndexed = R.addIndex(R.map);
 
 const pad = (padding) =>
   R.compose(R.prepend(padding), R.append(padding));
@@ -31,8 +35,12 @@ export const proximityMines =
   R.compose(R.length, R.filter(isMine), neighbours);
 
 
-const generateCell = () =>
-  ({ mine: Math.random() <= 0.3, flagged: Math.random() >= 0.7, neighbours: 0 });
+const generateCell = () =>({
+  mine: Math.random() <= 0.2,
+  flagged: false,
+  neighbours: 0,
+  revealed: false,
+});
 
 const generateRow = (n) =>
   R.range(0, n).map(generateCell);
@@ -42,7 +50,7 @@ const getNeighbours = (grid, row, col) =>
 
 export const generateGrid = (rows, cols) => {
   const grid = R.map(generateRow.bind(null, cols))(R.range(0, rows));
-  const mapIndexed = R.addIndex(R.map);
+
   const gridWithValues = mapIndexed(
     (row, rowIndex, grid) => mapIndexed(
       (cell, colIndex, row) => {
@@ -51,22 +59,20 @@ export const generateGrid = (rows, cols) => {
   )(grid);
 
   return gridWithValues;
-
-  // R.compose(
-  //   R.map(R.map(c => getCellValue)),
-
-  // ));
-}
+};
 
 
-
-
-// R.curry((row, col, neighbours) =>)
 const initialGrid = generateGrid(20, 30);
 
 const grid = (state = initialGrid, action) => {
 
   switch (action.type) {
+
+    case REVEAL_LOCATION:
+      var { row, col } = action;
+      const cp = R.clone(state);
+      cp[row][col].revealed = true;
+      return cp;
 
 
     default:
