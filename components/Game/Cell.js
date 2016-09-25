@@ -14,7 +14,7 @@ const Cell = ({ isMine, isFlagged, neighbours, isRevealed, onClick }) => {
 
   if (isRevealed) {
     if (isFlagged) return <span style={style} onClick={onClick}>🚩</span>;
-    if (isMine) return <span style={style}>💣</span>;
+    if (isMine) return <span style={style}>💩</span>;
     if (neighbours === 0) return <span style={style} onClick={onClick}>{ '✔️' }</span>;;
     return <span style={style} onClick={onClick}>{ neighbours }</span>;
   }
