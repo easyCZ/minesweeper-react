@@ -3,7 +3,8 @@ import R from 'ramda';
 import gridReducer, {
   neighbours,
   padGrid,
-  proximityMines
+  proximityMines,
+  reveal,
 } from '../../../core/grid/reducers.js';
 
 
@@ -125,6 +126,63 @@ describe('Pad Grid', () => {
       [null, 7, 8, 9, null],
       [null, null, null, null, null],
     ]);
+  });
+
+});
+
+describe('Reveal cell', () => {
+
+  const mine = { mine: true };
+  const cell = { revealed: false };
+
+  it('should only reveal one cell when surrounded by mines', () => {
+    const grid = [
+      [mine, mine, mine, mine, mine],
+      [mine, mine, mine, mine, mine],
+      [mine, mine, cell, mine, mine],
+      [mine, mine, mine, mine, mine],
+      [mine, mine, mine, mine, mine],
+    ];
+
+    const newGrid = reveal(2, 2, grid);
+    expect(newGrid[2][2].revealed).to.be.true;
+    const adjacent = neighbours(2, 2, grid);
+    expect(R.all(R.map(c => c.revealed, adjacent))).to.be.false;
+  });
+
+  it('should reveal all adjacent cells when no border mines', () => {
+    const grid = [
+      [mine, mine, mine, mine, mine],
+      [mine, cell, cell, cell, mine],
+      [mine, cell, cell, cell, mine],
+      [mine, cell, cell, cell, mine],
+      [mine, mine, mine, mine, mine],
+    ];
+
+    const newGrid = reveal(2, 2, grid);
+    expect(newGrid[2][2].revealed).to.be.true;
+    const adjacent = neighbours(2, 2, grid);
+    expect(R.all(R.map(c => c.revealed, adjacent))).to.be.true;
+  });
+
+  it('should reveal all adjacent cells recursively if no mines', () => {
+    const grid = [
+      [mine, mine, mine, mine, mine],
+      [mine, cell, cell, cell, mine],
+      [cell, cell, cell, cell, mine],
+      [cell, cell, cell, cell, mine],
+      [cell, cell, cell, mine, mine],
+    ];
+
+    const newGrid = reveal(2, 2, grid);
+    expect(newGrid[2][2].revealed).to.be.true;
+    const adjacent = neighbours(2, 2, grid);
+    expect(R.all(R.map(c => c.revealed, adjacent))).to.be.true;
+    expect(newGrid[2][0].revealed).to.be.true;
+    expect(newGrid[3][0].revealed).to.be.true;
+    expect(newGrid[4][0].revealed).to.be.true;
+    expect(newGrid[4][1].revealed).to.be.true;
+    expect(newGrid[4][2].revealed).to.be.true;
   });
 
 });

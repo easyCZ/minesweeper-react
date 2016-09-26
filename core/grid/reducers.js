@@ -30,6 +30,9 @@ export const neighbours = R.curry((row, col, grid) => {
 });
 
 const isMine = (c) => c.mine;
+const isRevealed = (c) => c.revealed;
+const isHidden = R.not(isRevealed);
+const hasNeighbours = (c) => c.neighbours > 0;
 
 export const proximityMines =
   R.compose(R.length, R.filter(isMine), neighbours);
@@ -60,6 +63,33 @@ export const generateGrid = (rows, cols) => {
 
   return gridWithValues;
 };
+
+const hiddenNeighbours = R.compose(
+  R.filter(isHidden),
+  neighbours,
+);
+
+export const reveal = R.curry((row, col, grid) => {
+  var gridCopy = R.clone(grid);
+
+  gridCopy[row][col].revealed = true;
+
+  var revelableAjdacent = R.compose(
+    R.filter(hasNeighbours),
+    hiddenNeighbours
+  );
+
+  // TODO: Finish depth first reveal
+  // R.reduce((grid, ))
+
+  // if (R.length(revelableAjdacent) > 0) {
+  //   const revealRowCol = reveal()
+  // }
+
+  //   gridCopy = reveal
+
+  return grid;
+})
 
 
 const initialGrid = generateGrid(20, 30);
